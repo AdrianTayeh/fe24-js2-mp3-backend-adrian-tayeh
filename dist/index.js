@@ -2,13 +2,9 @@ import express from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs/promises";
-import path from "path";
-import { fileURLToPath } from "url";
 const PORT = 3000;
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const PATH = path.join(__dirname, "bookDB.json");
+const PATH = "./src/bookDB.json";
 app.use(express.json());
 app.use(cors());
 app.listen(PORT, () => {
