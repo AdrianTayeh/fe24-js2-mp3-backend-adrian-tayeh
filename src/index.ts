@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs/promises";
@@ -43,13 +43,13 @@ const saveBooks = async () => {
 
 loadBooks();
 
-app.get("/books", (req: Request, res: Response) => {
+app.get("/books", (req, res) => {
   res.json(books);
 });
 
 app.post(
   "/books",
-  async (req: Request, res: Response) => {
+  async (req, res) => {
     const { title, writer } = req.body;
 
     if (typeof title !== 'string' || typeof writer !== 'string') {
@@ -69,7 +69,7 @@ app.post(
   }
 );
 
-app.patch("/books/:id/read", async (req: Request, res: Response) => {
+app.patch("/books/:id/read", async (req, res) => {
   const { id } = req.params;
   const book = books.find((b) => b.id === id);
   if (book) {
@@ -84,7 +84,7 @@ app.patch("/books/:id/read", async (req: Request, res: Response) => {
   }
 });
 
-app.patch("/books/:id/review", async (req: Request, res: Response) => {
+app.patch("/books/:id/review", async (req, res) => {
   const { id } = req.params;
   const book = books.find((b) => b.id === id);
   if (book) {
@@ -100,7 +100,7 @@ app.patch("/books/:id/review", async (req: Request, res: Response) => {
   }
 });
 
-app.delete("/books/:id", async (req: Request, res: Response) => {
+app.delete("/books/:id", async (req, res) => {
   const { id } = req.params;
   books = books.filter((b) => b.id !== id);
   await saveBooks();
