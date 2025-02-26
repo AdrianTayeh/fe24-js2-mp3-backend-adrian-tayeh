@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import fs from "fs/promises";
 const PORT = 3000;
 const app = express();
+const PATH = "./bookDB.json";
 app.use(express.json());
 app.use(cors());
 app.listen(PORT, () => {
@@ -12,7 +13,7 @@ app.listen(PORT, () => {
 let books = [];
 const loadBooks = async () => {
     try {
-        const data = await fs.readFile("./src/bookDB.json", "utf-8");
+        const data = await fs.readFile(PATH, "utf-8");
         books = data ? JSON.parse(data) : [];
     }
     catch (error) {
@@ -22,7 +23,7 @@ const loadBooks = async () => {
 };
 const saveBooks = async () => {
     try {
-        await fs.writeFile("./src/bookDB.json", JSON.stringify(books, null, 2));
+        await fs.writeFile(PATH, JSON.stringify(books, null, 2));
     }
     catch (error) {
         console.error("Error writing books file: ", error);
