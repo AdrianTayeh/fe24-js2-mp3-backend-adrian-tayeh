@@ -20,12 +20,12 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
     "concurrently": "^9.1.2",
+    "del-cli": "^6.0.0",
     "typescript": "^5.7.3"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "del-cli": "^6.0.0",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "uuid": "^11.1.0"
