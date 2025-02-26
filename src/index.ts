@@ -1,9 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { v4 as uuidv4 } from "uuid";
-import { body, validationResult } from "express-validator";
-import fs from 'fs/promises';
-
+import fs from "fs/promises";
 
 const PORT = 3000;
 const app = express();
@@ -26,22 +24,22 @@ type Book = {
 let books: Book[] = [];
 
 const loadBooks = async () => {
-    try {
-        const data = await fs.readFile("./src/bookDB.json", 'utf-8');
-        books = data ? JSON.parse(data): [];
-    } catch (error) {
-        console.error('Error reading books file: ', error);
-        books = [];
-    }
+  try {
+    const data = await fs.readFile("./src/bookDB.json", "utf-8");
+    books = data ? JSON.parse(data) : [];
+  } catch (error) {
+    console.error("Error reading books file: ", error);
+    books = [];
+  }
 };
 
 const saveBooks = async () => {
-    try {
-        await fs.writeFile('./src/bookDB.json', JSON.stringify(books, null, 2));
-    } catch (error) {
-        console.error('Error writing books file: ', error);
-    }
-}
+  try {
+    await fs.writeFile("./src/bookDB.json", JSON.stringify(books, null, 2));
+  } catch (error) {
+    console.error("Error writing books file: ", error);
+  }
+};
 
 loadBooks();
 
@@ -49,35 +47,22 @@ app.get("/books", (req, res) => {
   res.json(books);
 });
 
-const validateBook = [
-    body('title').isString(),
-    body('writer').isString()
-];
+app.post("/books", async (req: Request, res: Response) => {
 
-app.post(
-    '/books',
-    validateBook,
-    async (req: Request, res: Response, next: NextFunction) => { 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            res.status(400).json({ errors: errors.array() });
-            return;
-        }
-
-        const { title, writer } = req.body;
-        const newBook: Book = {
-            id: uuidv4(),
-            title,
-            writer,
-            read: false
-        };
-        books.push(newBook);
-        await saveBooks();
-        res.status(201).json(newBook);
-    }
+    const { title, writer } = req.body;
+    const newBook: Book = {
+      id: uuidv4(),
+      title,
+      writer,
+      read: false
+    };
+    books.push(newBook);
+    await saveBooks();
+    res.status(201).json(newBook);
+  }
 );
 
-app.patch("/books/:id/read", async(req, res) => {
+app.patch("/books/:id/read", async (req, res) => {
   const { id } = req.params;
   const book = books.find((b) => b.id === id);
   if (book) {
@@ -101,9 +86,7 @@ app.patch("/books/:id/review", async (req, res) => {
       await saveBooks();
       res.json(book);
     } else {
-      res
-        .status(400)
-        .send("Book must be marked as read before adding a review");
+      res.status(400).send("Book must be marked as read before adding a review");
     }
   } else {
     res.status(404).send("Book not found");

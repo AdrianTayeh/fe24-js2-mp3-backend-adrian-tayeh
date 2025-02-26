@@ -1,51 +1,46 @@
-import express from "express";
-import cors from "cors";
-import { v4 as uuidv4 } from "uuid";
-import { body, validationResult } from "express-validator";
-import fs from 'fs/promises';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const uuid_1 = require("uuid");
+const promises_1 = __importDefault(require("fs/promises"));
 const PORT = 3000;
-const app = express();
-app.use(express.json());
-app.use(cors());
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use((0, cors_1.default)());
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 let books = [];
 const loadBooks = async () => {
     try {
-        const data = await fs.readFile("./src/bookDB.json", 'utf-8');
+        const data = await promises_1.default.readFile("./src/bookDB.json", "utf-8");
         books = data ? JSON.parse(data) : [];
     }
     catch (error) {
-        console.error('Error reading books file: ', error);
+        console.error("Error reading books file: ", error);
         books = [];
     }
 };
 const saveBooks = async () => {
     try {
-        await fs.writeFile('./src/bookDB.json', JSON.stringify(books, null, 2));
+        await promises_1.default.writeFile("./src/bookDB.json", JSON.stringify(books, null, 2));
     }
     catch (error) {
-        console.error('Error writing books file: ', error);
+        console.error("Error writing books file: ", error);
     }
 };
 loadBooks();
 app.get("/books", (req, res) => {
     res.json(books);
 });
-const validateBook = [
-    body('title').isString(),
-    body('writer').isString()
-];
-app.post('/books', validateBook, async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
-        return;
-    }
+app.post("/books", async (req, res) => {
     const { title, writer } = req.body;
     const newBook = {
-        id: uuidv4(),
+        id: (0, uuid_1.v4)(),
         title,
         writer,
         read: false
@@ -79,9 +74,7 @@ app.patch("/books/:id/review", async (req, res) => {
             res.json(book);
         }
         else {
-            res
-                .status(400)
-                .send("Book must be marked as read before adding a review");
+            res.status(400).send("Book must be marked as read before adding a review");
         }
     }
     else {
