@@ -39,6 +39,10 @@ app.get("/books", (req, res) => {
 });
 app.post("/books", async (req, res) => {
     const { title, writer } = req.body;
+    if (typeof title !== 'string' || typeof writer !== 'string') {
+        res.status(400).json({ errors: [{ msg: 'Invalid input' }] });
+        return;
+    }
     const newBook = {
         id: (0, uuid_1.v4)(),
         title,
