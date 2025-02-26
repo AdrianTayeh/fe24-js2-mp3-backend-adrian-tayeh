@@ -77,7 +77,7 @@ app.post(
     }
 );
 
-app.put("/books/:id/read", async(req, res) => {
+app.patch("/books/:id/read", async(req, res) => {
   const { id } = req.params;
   const book = books.find((b) => b.id === id);
   if (book) {
@@ -92,7 +92,7 @@ app.put("/books/:id/read", async(req, res) => {
   }
 });
 
-app.put("/books/:id/review", async (req, res) => {
+app.patch("/books/:id/review", async (req, res) => {
   const { id } = req.params;
   const book = books.find((b) => b.id === id);
   if (book) {

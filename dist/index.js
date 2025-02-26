@@ -54,7 +54,7 @@ app.post('/books', validateBook, async (req, res, next) => {
     await saveBooks();
     res.status(201).json(newBook);
 });
-app.put("/books/:id/read", async (req, res) => {
+app.patch("/books/:id/read", async (req, res) => {
     const { id } = req.params;
     const book = books.find((b) => b.id === id);
     if (book) {
@@ -69,7 +69,7 @@ app.put("/books/:id/read", async (req, res) => {
         res.status(404).send("Book not found");
     }
 });
-app.put("/books/:id/review", async (req, res) => {
+app.patch("/books/:id/review", async (req, res) => {
     const { id } = req.params;
     const book = books.find((b) => b.id === id);
     if (book) {
